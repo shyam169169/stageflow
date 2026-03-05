@@ -1,0 +1,5 @@
+ruff    
+pytest
+sqlalchemy
+databases[aiosqlite]
+python-dotenv
