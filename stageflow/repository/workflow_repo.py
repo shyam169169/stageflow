@@ -1,18 +1,21 @@
 
-from abc import ABC
+from abc import ABC, abstractmethod
+from stageflow.core.domain.models.models import WorkflowDefinition
+from typing import Optional, List
 
-class WorkflowRepository():
-    def register_workflow():
+class WorkflowRepository(ABC):
+
+    @abstractmethod
+    def save(self, workflow: WorkflowDefinition):
         pass
 
-    def create_workflow_instance() -> str:
+    
+    @abstractmethod
+    def get(self, name: str, 
+            version: Optional[int] = None
+            ) ->WorkflowDefinition:
         pass
 
-    def transition() -> str:
-        pass
-
-    def get_instance() -> instance:
-        pass
-
-    def get_transition_history() -> list:
+    @abstractmethod
+    def get_all(self) -> List[WorkflowDefinition]:
         pass

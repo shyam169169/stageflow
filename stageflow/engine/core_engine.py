@@ -1,5 +1,5 @@
 from abc import ABC
-from stageflow.core.domain.models.workflow import *
+from stageflow.stageflow.core.domain.models.models import *
 
 class WorkflowEngine(ABC):
     def register_workflow(self, workflow: WorkflowDefinition):

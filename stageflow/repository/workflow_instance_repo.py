@@ -1,20 +1,20 @@
 
 from abc import ABC, abstractmethod
-from stageflow.core.domain.models.workflow import *
+from stageflow.stageflow.core.domain.models.models import *
 
 class WorkflowInstanceRepository:
     @abstractmethod
-    def create_instance(self, instance :WorkflowInstance) -> WorkflowInstance:
+    def save(self, instance :WorkflowInstance) -> WorkflowInstance:
         pass
 
     @abstractmethod
-    def get_instance(self, instance_id: str) -> WorkflowInstance:
+    def get(self, instance_id: str) -> WorkflowInstance:
         pass
 
     @abstractmethod
-    def update_instance(self, instance_id: str) -> WorkflowInstance:
+    def update(self, instance_id: str) -> WorkflowInstance:
         pass
 
     @abstractmethod
-    def delete_instance(self, instance_id: str):
+    def delete(self, instance_id: str):
         pass
