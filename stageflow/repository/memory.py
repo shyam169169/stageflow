@@ -25,7 +25,7 @@ class InMemoryWorkflowInstanceRepository():
     def __init__(self):
         self.instances: dict[str, WorkflowInstance] = {}
 
-    def save(self, instance: WorkflowInstance) -> None:
+    def create(self, instance: WorkflowInstance) -> None:
         self.instances[instance.id] = instance
     
     def get(self, instance_id: str) -> WorkflowInstance:

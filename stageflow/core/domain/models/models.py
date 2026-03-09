@@ -2,7 +2,22 @@
 from typing import List, Dict, Optional
 from datetime import datetime
 from dataclasses import dataclass, field
+from stageflow.stageflow.rules.rule import Rule
 
+
+@dataclass
+class Transition:
+    from_stage: str
+    to_stage: str
+    metadata: dict | None
+    rules : list[Rule]
+
+
+@dataclass
+class Stage:
+    name: str
+    is_terminal: bool = False
+    metadata: dict | None
 
 @dataclass
 class WorkflowDefinition:
@@ -21,31 +36,18 @@ class WorkflowInstance:
     metadata: dict  | None # Used for data points for rules
     created_date: datetime = field(default_factory=datetime.utcnow)
     updated_date: datetime = field(default_factory=datetime.utcnow)
-    created_by: str
-    updated_by: str
     version: int = 1 ## This is used for optimistic locking
-
-@dataclass
-class Transition:
-    from_stage: str
-    to_stage: str
-    metadata: dict | None
-    rules : list["Rule"] # Something like if payment == success, proceed with the transition
 
 
 @dataclass
 class TransitionRecord: # When did the order move to SHIPPED? Which stage is causing delays?
+    id: str
     instance_id: int
     from_stage: str
     to_stage: str
     created_date: datetime = field(default_factory=datetime.utcnow)
     metadata_snapshot: dict | None
 
-@dataclass
-class Stage:
-    name: str
-    is_terminal: bool = False
-    metadata: dict | None
 
 
 
