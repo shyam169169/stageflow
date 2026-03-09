@@ -6,7 +6,6 @@ class InMemoryWorkflowRepository():
         self.workflows = {}
 
     def save(self, workflow: WorkflowDefinition) -> None:
-        print ("WORKFLOW SAVED!!!!")
         self.workflows[workflow.name] = workflow
 
     def get(self, name: str, version: Optional[int] = None) -> WorkflowDefinition:
