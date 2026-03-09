@@ -23,6 +23,7 @@ class WorkflowInstance:
     updated_date: datetime = field(default_factory=datetime.utcnow)
     created_by: str
     updated_by: str
+    version: int = 1 ## This is used for optimistic locking
 
 @dataclass
 class Transition:
@@ -35,7 +36,7 @@ class Transition:
 @dataclass
 class TransitionRecord: # When did the order move to SHIPPED? Which stage is causing delays?
     id: str
-    workflow_instance_id: int
+    instance_id: int
     from_stage: str
     to_stage: str
     created_date: datetime = field(default_factory=datetime.utcnow)
