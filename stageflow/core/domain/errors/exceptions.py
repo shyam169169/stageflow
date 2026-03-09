@@ -8,7 +8,7 @@ class WorkflowNotFoundException(StageFlowException):
 class InstanceNotFoundException(StageFlowException):
     pass
 
-class InstanceUpdateException(StageFlowException):
+class ConcurrentTransitionException(StageFlowException):
     pass
 
 class InvalidTansitionException(StageFlowException):

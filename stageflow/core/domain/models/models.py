@@ -35,7 +35,6 @@ class Transition:
 
 @dataclass
 class TransitionRecord: # When did the order move to SHIPPED? Which stage is causing delays?
-    id: str
     instance_id: int
     from_stage: str
     to_stage: str

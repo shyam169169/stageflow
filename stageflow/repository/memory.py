@@ -43,3 +43,19 @@ class InMemoryWorkflowInstanceRepository():
 
         instance_to_update.version += 1
         self.instances[instance_stored.id] = instance_to_update
+    
+    def delete(self, instance_id: str) -> None:
+        self.instances.pop(instance_id, None)
+
+class InMemoryHistoryRepository():
+    def __init__(self):
+        self.transition_history: Dict[str, List[TransitionRecord]] = {}
+    
+    def record(self, transition: TransitionRecord) -> None:
+        instance_id = transition.instance_id
+        if instance_id not in self.transition_history:
+            self.transition_history[instance_id] = {}
+        self.transition_history[instance_id].append(transition)
+
+    def get_all_transitions(self, instance_id: str) -> List[TransitionRecord]:
+        return self.transition_history.get(instance_id, None)
