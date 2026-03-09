@@ -1,11 +1,12 @@
 from stageflow.core.domain.models.models import *
-from stageflow.stageflow.core.domain.errors.exceptions import WorkflowNotFoundException, InstanceNotFoundException, ConcurrentTransitionException
+from stageflow.core.domain.errors.exceptions import WorkflowNotFoundException, InstanceNotFoundException, ConcurrentTransitionException
 
 class InMemoryWorkflowRepository():
     def __init__(self):
-        self.workflows: dict[str, WorkflowDefinition] = {}
+        self.workflows = {}
 
     def save(self, workflow: WorkflowDefinition) -> None:
+        print ("WORKFLOW SAVED!!!!")
         self.workflows[workflow.name] = workflow
 
     def get(self, name: str, version: Optional[int] = None) -> WorkflowDefinition:
@@ -25,8 +26,9 @@ class InMemoryWorkflowInstanceRepository():
     def __init__(self):
         self.instances: dict[str, WorkflowInstance] = {}
 
-    def create(self, instance: WorkflowInstance) -> None:
+    def create(self, instance: WorkflowInstance) -> WorkflowInstance:
         self.instances[instance.id] = instance
+        return instance
     
     def get(self, instance_id: str) -> WorkflowInstance:
         instance = self.instances.get(instance_id)
@@ -49,13 +51,17 @@ class InMemoryWorkflowInstanceRepository():
 
 class InMemoryHistoryRepository():
     def __init__(self):
-        self.transition_history: Dict[str, List[TransitionRecord]] = {}
+        self.transition_history: Dict[str, List[TransitionRecord]] =  {}
     
     def record(self, transition: TransitionRecord) -> None:
         instance_id = transition.instance_id
+
         if instance_id not in self.transition_history:
-            self.transition_history[instance_id] = {}
-        self.transition_history[instance_id].append(transition)
+            self.transition_history[instance_id] = []
+
+        list_of_records = self.transition_history[instance_id]
+        list_of_records.append(transition)
+        
 
     def get_all_transitions(self, instance_id: str) -> List[TransitionRecord]:
         return self.transition_history.get(instance_id, None)

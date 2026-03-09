@@ -1,9 +1,9 @@
 
 import uuid
 from datetime import datetime
-from stageflow.stageflow.core.domain.models.models import *
-from stageflow.stageflow.core.domain.errors.exceptions import *
-from stageflow.stageflow.repository.memory import *
+from stageflow.core.domain.models.models import *
+from stageflow.core.domain.errors.exceptions import *
+from stageflow.repository.memory import *
 
 
 class WorkflowEngine:
@@ -16,8 +16,22 @@ class WorkflowEngine:
         self.instance_repo = instance_repo
         self.history_repo = history_repo 
 
-    def register_workflow(self, workflow: WorkflowDefinition):
+    def register_workflow(
+            self, 
+            workflow_name: str,
+            stages: list[Stage],
+            transitions: list[Transition],
+            initial_stage: str,
+            version: int) -> WorkflowDefinition:
+        workflow = WorkflowDefinition(
+            name=workflow_name,
+            stages=stages,
+            transitions=transitions,
+            initial_stage=initial_stage,
+            version=version
+        )
         self.workflow_repo.save(workflow)
+        return workflow
 
     def create_instance(
             self,
@@ -62,9 +76,10 @@ class WorkflowEngine:
             "metadata": metadata or {}
         }
 
-        for rule in transition.rules:
-            if not rule.evaluate(context):
-                raise RuleVoilationException("Rule failed for transition '{transition.from_stage} -> {transition.to_stage}'")
+        if transition.rules is not None:
+            for rule in transition.rules:
+                if not rule.evaluate(context):
+                    raise RuleVoilationException("Rule failed for transition '{transition.from_stage} -> {transition.to_stage}'")
             
         from_stage = instance.current_stage
         instance.current_stage = to_stage
@@ -82,7 +97,7 @@ class WorkflowEngine:
             instance_id=instance_id,
             from_stage=from_stage,
             to_stage=to_stage,
-            metadata=metadata
+            metadata_snapshot=metadata
         )
         self.history_repo.record(record)
 
@@ -96,12 +111,12 @@ class WorkflowEngine:
     def get_history(self, instance_id: str) -> list[TransitionRecord]:
         return self.history_repo.get_all_transitions(instance_id)
     
-    def get_transition(self, workflow, from_stage, to_stage) -> Transition:
-        workflow = self.workflow_repo.get(workflow)
+    def get_transition(self, workflow: WorkflowDefinition, from_stage: str, to_stage: str) -> Transition:
+        workflow = self.workflow_repo.get(workflow.name)
 
         for transition in workflow.transitions:
             if (from_stage == transition.from_stage 
             and to_stage == transition.to_stage): 
                 return transition
         
-        raise InvalidTansitionException("Transition from '{from_stage}' to '{to_stage}' not allowed")
+        raise InvalidTansitionException(f"Transition from {from_stage} to {to_stage} not allowed")

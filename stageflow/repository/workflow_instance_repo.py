@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from stageflow.stageflow.core.domain.models.models import *
+from stageflow.core.domain.models.models import *
 
 class WorkflowInstanceRepository:
     @abstractmethod
