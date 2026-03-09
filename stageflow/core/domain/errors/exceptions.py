@@ -16,3 +16,6 @@ class InvalidTansitionException(StageFlowException):
 
 class RuleVoilationException(StageFlowException):
     pass
+
+class WorkflowValidationException(StageFlowException):
+    pass

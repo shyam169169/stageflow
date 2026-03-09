@@ -1,10 +1,11 @@
 
 import uuid
 from datetime import datetime
+from typing import Set
 from stageflow.core.domain.models.models import *
 from stageflow.core.domain.errors.exceptions import *
 from stageflow.repository.memory import *
-
+from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator as validator
 
 class WorkflowEngine:
     def __init__(
@@ -30,6 +31,7 @@ class WorkflowEngine:
             initial_stage=initial_stage,
             version=version
         )
+        validator.validate_workflow(workflow)
         self.workflow_repo.save(workflow)
         return workflow
 
