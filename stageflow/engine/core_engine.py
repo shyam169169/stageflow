@@ -5,6 +5,7 @@ from typing import Set
 from stageflow.core.domain.models.models import *
 from stageflow.core.domain.errors.exceptions import *
 from stageflow.repository.memory import *
+from stageflow.core.domain.context import TransitionContext
 from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator
 
 class WorkflowEngine:
@@ -80,11 +81,12 @@ class WorkflowEngine:
         )
 
         # Before doing the transition, check for rules
-        context = {
-            "instance": instance,
-            "workflow": workflow,
-            "metadata": metadata or {}
-        }
+        context = TransitionContext(
+            instance=instance,
+            workflow= workflow,
+            transition=transition,
+            metadata=metadata
+        )
 
         if transition.rules is not None:
             for rule in transition.rules:

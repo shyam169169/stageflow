@@ -39,8 +39,6 @@ class WorkflowDefinition:
             if stage.name == stage_name:
                 return stage
         
-
-
 @dataclass
 class WorkflowInstance:
     id: str
