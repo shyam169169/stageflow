@@ -27,6 +27,14 @@ class WorkflowDefinition:
     initial_stage: str
     version: int
 
+    def allowed_transitions_from(self, stage_name: str) -> List[Transition]:
+        return [
+            transition 
+            for transition in self.transitions
+            if transition.from_stage == stage_name
+        ]
+
+
 @dataclass
 class WorkflowInstance:
     id: str

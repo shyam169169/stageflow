@@ -123,17 +123,13 @@ class WorkflowEngine:
         
         raise InvalidTansitionException(f"Transition from {from_stage} to {to_stage} not allowed")
     
-    def get_available_transitions(self, instance_id: str) -> List[Transition]:
+    def get_available_transitions(self, instance_id: str) -> List[str]:
         instance = self.instance_repo.get(instance_id)
         workflow = self.workflow_repo.get(instance.workflow_name)
-        available_transitions = []
-        current_stage_found = False
 
-        for transition in workflow.transitions:
-            if current_stage_found or instance.current_stage == workflow.initial_stage:
-                available_transitions.append(transition)
-            else:
-                if instance.current_stage == transition.to_stage:
-                    current_stage_found = True
+        transitions = workflow.allowed_transitions_from(instance.current_stage)
+        return [
+            transition.to_stage
+            for transition in transitions
+        ]
         
-        return available_transitions

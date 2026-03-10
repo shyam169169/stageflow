@@ -90,14 +90,17 @@ def test_available_transitions():
     workflow = create_workflow(engine)
     instance = create_instance(engine, workflow)
 
-    available_transitions = engine.get_available_transitions(instance.id)
-    assert len(available_transitions) == 2
-    assert available_transitions[0].from_stage is "ORDERED"
+    available_transition_stages = engine.get_available_transitions(instance.id)
+    assert len(available_transition_stages) == 1
+    assert available_transition_stages[0] is "PACKED"
 
-    instance = engine.do_transition(
-        instance.id,
-        "PACKED"
-    )
-    available_transitions = engine.get_available_transitions(instance.id)
-    assert len(available_transitions) == 1
-    assert available_transitions[0].from_stage is "PACKED"
+    transitions=[
+            Transition("ORDERED", "PACKED"),
+            Transition("PACKED", "SHIPPED"),
+            Transition("ORDERED", "SHIPPED")
+        ]
+    workflow.transitions = transitions
+    available_transition_stages = engine.get_available_transitions(instance.id)
+    assert len(available_transition_stages) == 2
+    assert available_transition_stages[0] is "PACKED"
+    assert available_transition_stages[1] is "SHIPPED"
