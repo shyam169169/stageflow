@@ -19,3 +19,4 @@ def test_metadata_rule():
     rule2 = MetadataRule("payment_status", "sent")
     assert rule1.evaluate(context) is True
     assert rule2.evaluate(context) is False
+    

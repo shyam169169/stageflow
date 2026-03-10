@@ -1,6 +1,9 @@
 from stageflow.engine.core_engine import WorkflowEngine
 from stageflow.core.domain.models.models import *
 from stageflow.repository.memory import InMemoryHistoryRepository, InMemoryWorkflowInstanceRepository, InMemoryWorkflowRepository
+from stageflow.hooks.builtin.audit_hook import AuditHook
+from stageflow.hooks.builtin.web_hook import WebHook
+
 
 stages = [
     Stage("ordered"),
@@ -25,6 +28,9 @@ engine = WorkflowEngine(
     instance_repo=instance_repo,
     history_repo=history_repo
 )
+
+engine.register_hooks(AuditHook())
+engine.register_hooks(WebHook())
 
 delivery_workflow = engine.register_workflow(
     workflow_name="delivery_workflow",

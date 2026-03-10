@@ -5,6 +5,7 @@ from stageflow.engine.core_engine import WorkflowEngine
 from stageflow.repository.memory import InMemoryWorkflowRepository, InMemoryWorkflowInstanceRepository, InMemoryHistoryRepository
 from stageflow.core.domain.errors.exceptions import InvalidTansitionException
 
+
 def create_engine() -> WorkflowEngine:
     workflow_repo = InMemoryWorkflowRepository()
     instance_repo = InMemoryWorkflowInstanceRepository()

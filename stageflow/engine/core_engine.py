@@ -7,6 +7,7 @@ from stageflow.core.domain.errors.exceptions import *
 from stageflow.repository.memory import *
 from stageflow.core.domain.context import TransitionContext
 from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator
+from stageflow.hooks.base_hooks import Hook
 
 class WorkflowEngine:
     def __init__(
@@ -16,7 +17,11 @@ class WorkflowEngine:
             history_repo: InMemoryHistoryRepository): 
         self.workflow_repo = workflow_repo
         self.instance_repo = instance_repo
-        self.history_repo = history_repo  
+        self.history_repo = history_repo
+        self.hooks: List[Hook] = []
+
+    def register_hooks(self, hook: Hook):
+        self.hooks.append(hook)
 
     def register_workflow(
             self, 
@@ -92,7 +97,11 @@ class WorkflowEngine:
             for rule in transition.rules:
                 if not rule.evaluate(context):
                     raise RuleVoilationException("Rule failed for transition '{transition.from_stage} -> {transition.to_stage}'")
-            
+
+        
+        for hook in self.hooks:
+            hook.perform_pre_hook(context)
+
         from_stage = instance.current_stage
         instance.current_stage = to_stage
         instance.updated_date = datetime.now()
@@ -112,6 +121,10 @@ class WorkflowEngine:
             metadata_snapshot=metadata
         )
         self.history_repo.record(record)
+
+        # run post hook
+        for hook in self.hooks:
+            hook.perform_post_hook(context)
 
         # return the updated instance
         return instance
