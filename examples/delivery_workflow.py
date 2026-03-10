@@ -4,7 +4,6 @@ from stageflow.repository.memory import InMemoryHistoryRepository, InMemoryWorkf
 from stageflow.hooks.builtin.audit_hook import AuditHook
 from stageflow.hooks.builtin.web_hook import WebHook
 
-
 stages = [
     Stage("ordered"),
     Stage("packed"),
@@ -64,3 +63,10 @@ history = engine.get_history(instance.id)
 
 for record in history:
     print (f"{record.from_stage} -> {record.to_stage}")
+
+dot = engine.export_graph("delivery_workflow")
+print(dot)
+
+#Generates the dot file
+with open("examples/dotfiles/delivery.dot", "w") as f:
+    f.write(dot)

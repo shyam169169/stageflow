@@ -1,0 +1,12 @@
+digraph delivery_workflow {
+    rankdir=LR;
+    "ordered" [shape=circle];
+    "packed" [shape=circle];
+    "shipped" [shape=circle];
+    "in-transit" [shape=circle];
+    "delivered" [shape=doublecircle];
+    "ordered" -> "packed";
+    "packed" -> "shipped";
+    "shipped" -> "in-transit";
+    "in-transit" -> "delivered";
+}

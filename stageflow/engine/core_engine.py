@@ -1,13 +1,13 @@
 
 import uuid
 from datetime import datetime
-from typing import Set
 from stageflow.core.domain.models.models import *
 from stageflow.core.domain.errors.exceptions import *
 from stageflow.repository.memory import *
 from stageflow.core.domain.context import TransitionContext
 from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator
 from stageflow.hooks.base_hooks import Hook
+from stageflow.visualization.graphviz_exporter import GraphvizExporter
 
 class WorkflowEngine:
     def __init__(
@@ -155,4 +155,8 @@ class WorkflowEngine:
             transition.to_stage
             for transition in transitions
         ]
+
+    def export_graph(self, workflow_name: str):
+        workflow = self.workflow_repo.get(workflow_name)
+        return GraphvizExporter.to_dot(workflow)
         
