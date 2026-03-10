@@ -2,7 +2,7 @@
 from typing import List, Dict, Optional
 from datetime import datetime
 from dataclasses import dataclass, field
-from stageflow.rules.rule import Rule
+from stageflow.rules.base_rule import Rule
 
 
 @dataclass
