@@ -49,3 +49,25 @@ def test_invalid_transition():
 
     with pytest.raises(WorkflowValidationException):
         WorkflowDefinitionValidator.validate_workflow(workflow)
+
+def test_unreachable_stage_validation():
+    workflow = WorkflowDefinition(
+        name="delivery",
+        initial_stage="ORDERED",
+        stages=[
+            Stage("ORDERED"),
+            Stage("PACKED"),
+            Stage("SHIPPED"),
+            Stage("DELIVERED"),
+            Stage("UNPACKED")
+        ],
+        transitions=[
+            Transition("ORDERED", "PACKED"),
+            Transition("PACKED", "SHIPPED"),
+            Transition("UNPACKED", "SHIPPED"),
+            Transition("SHIPPED", "DELIVERED")
+        ],
+        version=1
+    )
+    with pytest.raises(WorkflowValidationException):
+        WorkflowDefinitionValidator.validate_workflow(workflow)

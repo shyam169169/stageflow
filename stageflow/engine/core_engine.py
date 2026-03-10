@@ -5,7 +5,7 @@ from typing import Set
 from stageflow.core.domain.models.models import *
 from stageflow.core.domain.errors.exceptions import *
 from stageflow.repository.memory import *
-from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator as validator
+from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator
 
 class WorkflowEngine:
     def __init__(
@@ -15,7 +15,7 @@ class WorkflowEngine:
             history_repo: InMemoryHistoryRepository): 
         self.workflow_repo = workflow_repo
         self.instance_repo = instance_repo
-        self.history_repo = history_repo 
+        self.history_repo = history_repo  
 
     def register_workflow(
             self, 
@@ -31,7 +31,8 @@ class WorkflowEngine:
             initial_stage=initial_stage,
             version=version
         )
-        validator.validate_workflow(workflow)
+
+        WorkflowDefinitionValidator.validate_workflow(workflow)
         self.workflow_repo.save(workflow)
         return workflow
 

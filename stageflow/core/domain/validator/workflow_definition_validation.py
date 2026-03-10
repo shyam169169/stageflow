@@ -3,6 +3,7 @@ from typing import Set
 from stageflow.core.domain.models.models import WorkflowDefinition
 
 class WorkflowDefinitionValidator:
+    @staticmethod
     def validate_workflow(workflow: WorkflowDefinition):
         # workflow has at least one stage
         if not workflow.stages:
@@ -44,3 +45,28 @@ class WorkflowDefinitionValidator:
         for transition in workflow.transitions:
             if transition.from_stage in terminal_stages:
                 raise WorkflowValidationException(f"{transition.from_stage} is a terminal stage and cannot have transitions")
+        
+        # check for unreachable stages in the configuration
+        WorkflowDefinitionValidator.check_for_unreachable_stage(workflow)
+
+    @staticmethod
+    def check_for_unreachable_stage(workflow: WorkflowDefinition) -> None:
+        visited = set()
+        stage_graph = {}
+        for transition in workflow.transitions:
+            stage_graph.setdefault(transition.from_stage, []).append(transition.to_stage)
+
+        WorkflowDefinitionValidator.dfs(workflow.initial_stage, visited, stage_graph)
+        all_stages = set(stage_graph.keys())
+        unreachable = all_stages - visited
+
+        if unreachable:
+                raise WorkflowValidationException(
+                    f"Unreachable stages detected : {','.join(unreachable)}")
+
+
+    @staticmethod
+    def dfs(stage: str, visited: dict, stage_graph: dict):
+            visited.add(stage)
+            for next_stage in stage_graph.get(stage, []):
+                WorkflowDefinitionValidator.dfs(next_stage, visited, stage_graph)
