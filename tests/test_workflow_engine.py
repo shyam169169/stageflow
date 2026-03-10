@@ -84,3 +84,20 @@ def test_transition_history():
     assert len(history) == 2
     assert history[0].to_stage == "PACKED"
     assert history[1].to_stage == "SHIPPED"
+
+def test_available_transitions(): 
+    engine = create_engine()
+    workflow = create_workflow(engine)
+    instance = create_instance(engine, workflow)
+
+    available_transitions = engine.get_available_transitions(instance.id)
+    assert len(available_transitions) == 2
+    assert available_transitions[0].from_stage is "ORDERED"
+
+    instance = engine.do_transition(
+        instance.id,
+        "PACKED"
+    )
+    available_transitions = engine.get_available_transitions(instance.id)
+    assert len(available_transitions) == 1
+    assert available_transitions[0].from_stage is "PACKED"
