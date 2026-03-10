@@ -3,7 +3,7 @@ import pytest
 from stageflow.core.domain.models.models import WorkflowDefinition, Stage, Transition, WorkflowInstance
 from stageflow.engine.core_engine import WorkflowEngine
 from stageflow.repository.memory import InMemoryWorkflowRepository, InMemoryWorkflowInstanceRepository, InMemoryHistoryRepository
-
+from stageflow.core.domain.errors.exceptions import InvalidTansitionException
 
 def create_engine() -> WorkflowEngine:
     workflow_repo = InMemoryWorkflowRepository()
@@ -51,7 +51,6 @@ def test_workflow_engine_instance():
     instance = create_instance(engine, workflow)
     assert instance.id is not None
     assert instance.current_stage is "ORDERED"
-
 
 def test_workflow_engine_transition():
     engine = create_engine()
@@ -104,3 +103,20 @@ def test_available_transitions():
     assert len(available_transition_stages) == 2
     assert available_transition_stages[0] is "PACKED"
     assert available_transition_stages[1] is "SHIPPED"
+
+def test_terminal_stage_block():
+    engine = create_engine()
+    workflow = create_workflow(engine)
+    instance = create_instance(engine, workflow)
+
+    instance = engine.do_transition(
+        instance.id,
+        "PACKED"
+    )
+    instance = engine.do_transition(
+        instance.id,
+        "SHIPPED"
+    )
+
+    with pytest.raises(InvalidTansitionException): 
+        engine.do_transition(instance.id, "ORDERED")
