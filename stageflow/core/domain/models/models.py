@@ -12,7 +12,6 @@ class Transition:
     metadata: Optional[Dict] = None
     rules: Optional[list[Rule]] = None
 
-
 @dataclass
 class Stage:
     name: str
@@ -33,6 +32,13 @@ class WorkflowDefinition:
             for transition in self.transitions
             if transition.from_stage == stage_name
         ]
+    
+    def get_stage(self, stage_name:str) -> Stage:
+        stage = None
+        for stage in self.stages: 
+            if stage.name == stage_name:
+                return stage
+        
 
 
 @dataclass

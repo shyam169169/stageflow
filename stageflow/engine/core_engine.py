@@ -65,6 +65,13 @@ class WorkflowEngine:
 
         workflow = self.workflow_repo.get(instance.workflow_name)
 
+        # Validate if stage is terminal or it doesn't have any transitions
+        stage = workflow.get_stage(instance.current_stage)
+        allowed_transitions = workflow.allowed_transitions_from(instance.current_stage)
+
+        if not allowed_transitions or not stage or stage.is_terminal:
+            raise InvalidTansitionException (f"No transitions allowed from stage '{instance.current_stage}")
+
         transition = self.get_transition(
             workflow,
             instance.current_stage,
