@@ -47,9 +47,10 @@ class WorkflowInstance:
     reference_id: str # link to external system ids ORderid mapping to payment id on external system
     reference_domain: str # order, payment, user etc 
     metadata: Optional[dict] = None # Used for data points for rules
-    created_date: datetime = field(default_factory=datetime.utcnow)
-    updated_date: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
     version: int = 1 ## This is used for optimistic locking
+    workflow_version:int = 1
 
 
 @dataclass
@@ -58,7 +59,7 @@ class TransitionRecord: # When did the order move to SHIPPED? Which stage is cau
     instance_id: int
     from_stage: str
     to_stage: str
-    created_date: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=datetime.utcnow)
     metadata_snapshot: Optional[Dict] = None
 
 
