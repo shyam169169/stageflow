@@ -1,9 +1,10 @@
 import pytest
+import copy
 
 from stageflow.core.domain.models.models import WorkflowDefinition, Stage, Transition, WorkflowInstance
 from stageflow.engine.core_engine import WorkflowEngine
 from stageflow.repository.memory import InMemoryWorkflowRepository, InMemoryWorkflowInstanceRepository, InMemoryHistoryRepository
-from stageflow.core.domain.errors.exceptions import InvalidTansitionException
+from stageflow.core.domain.errors.exceptions import InvalidTansitionException, ConcurrentTransitionException
 
 
 def create_engine() -> WorkflowEngine:
@@ -121,3 +122,16 @@ def test_terminal_stage_block():
 
     with pytest.raises(InvalidTansitionException): 
         engine.do_transition(instance.id, "ORDERED")
+
+def test_optimistic_locking():
+    engine = create_engine()
+    workflow = create_workflow(engine)
+    instance = create_instance(engine, workflow)
+
+    instance.current_stage = "PACKED"
+    instance_copy = copy.copy(instance)
+    engine.instance_repo.update(instance)
+    
+    instance_copy.current_stage = "DELIVERED"
+    with pytest.raises(ConcurrentTransitionException):
+        engine.instance_repo.update(instance_copy)

@@ -4,6 +4,8 @@ from datetime import datetime
 from stageflow.core.domain.models.models import *
 from stageflow.core.domain.errors.exceptions import *
 from stageflow.repository.memory import *
+from stageflow.repository.postgres.instance_repository import PostgresInstanceRepository
+from stageflow.repository.postgres.history_repository import PostgresHistoryRepository
 from stageflow.core.domain.context import TransitionContext
 from stageflow.core.domain.validator.workflow_definition_validation import WorkflowDefinitionValidator
 from stageflow.hooks.base_hooks import Hook
@@ -13,8 +15,8 @@ class WorkflowEngine:
     def __init__(
             self, 
             workflow_repo: InMemoryWorkflowRepository,
-            instance_repo: InMemoryWorkflowInstanceRepository,
-            history_repo: InMemoryHistoryRepository): 
+            instance_repo: PostgresInstanceRepository,
+            history_repo: PostgresHistoryRepository): 
         self.workflow_repo = workflow_repo
         self.instance_repo = instance_repo
         self.history_repo = history_repo
@@ -110,7 +112,7 @@ class WorkflowEngine:
             instance.metadata.update(metadata)
         
         # Update the instance
-        self.instance_repo.update(instance)
+        instance = self.instance_repo.update(instance)
 
         #record the transition
         record = TransitionRecord(

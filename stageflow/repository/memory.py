@@ -45,6 +45,7 @@ class InMemoryWorkflowInstanceRepository(InstanceRepository):
 
         instance_to_update.version += 1
         self.instances[instance_stored.id] = instance_to_update
+        return instance_to_update
     
     def delete(self, instance_id: str) -> None:
         self.instances.pop(instance_id, None)
