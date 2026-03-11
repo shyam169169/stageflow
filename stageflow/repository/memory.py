@@ -1,5 +1,6 @@
 from stageflow.core.domain.models.models import *
 from stageflow.core.domain.errors.exceptions import WorkflowNotFoundException, InstanceNotFoundException, ConcurrentTransitionException
+from stageflow.repository.base.base_repository import InstanceRepository, HistoryRepository
 
 class InMemoryWorkflowRepository():
     def __init__(self):
@@ -21,7 +22,7 @@ class InMemoryWorkflowRepository():
     def get_list(self) -> List[WorkflowDefinition]:
         return list(self.workflows.values())
 
-class InMemoryWorkflowInstanceRepository():
+class InMemoryWorkflowInstanceRepository(InstanceRepository):
     def __init__(self):
         self.instances: dict[str, WorkflowInstance] = {}
 
@@ -48,11 +49,11 @@ class InMemoryWorkflowInstanceRepository():
     def delete(self, instance_id: str) -> None:
         self.instances.pop(instance_id, None)
 
-class InMemoryHistoryRepository():
+class InMemoryHistoryRepository(HistoryRepository):
     def __init__(self):
         self.transition_history: Dict[str, List[TransitionRecord]] =  {}
     
-    def record(self, transition: TransitionRecord) -> None:
+    def record(self, transition) -> None:
         instance_id = transition.instance_id
 
         if instance_id not in self.transition_history:
@@ -62,5 +63,5 @@ class InMemoryHistoryRepository():
         list_of_records.append(transition)
         
 
-    def get_all_transitions(self, instance_id: str) -> List[TransitionRecord]:
+    def get_all_transitions(self, instance_id: str):
         return self.transition_history.get(instance_id, None)
