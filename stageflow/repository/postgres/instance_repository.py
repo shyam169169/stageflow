@@ -19,7 +19,7 @@ class PostgresInstanceRepository(InstanceRepository):
     def get(self, instance_id):
         model = (
             self.db.query(WorkflowInstanceModel)
-            .filter_by(id=instance_id)
+            .filter(WorkflowInstanceModel.id==instance_id)
             .first()
         )
         if not model:

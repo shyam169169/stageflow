@@ -19,18 +19,20 @@ def create_engine() -> WorkflowEngine:
 
 def create_workflow(engine: WorkflowEngine) -> WorkflowDefinition:
     return engine.register_workflow(
-        workflow_name="delivery_workflow",
-        stages=[
-            Stage("ORDERED"),
-            Stage("PACKED"),
-            Stage("SHIPPED"),
-        ],
-        transitions=[
-            Transition("ORDERED", "PACKED"),
-            Transition("PACKED", "SHIPPED"),
-        ],
-        initial_stage="ORDERED",
-        version=1
+        WorkflowDefinition(
+            name="delivery_workflow",
+            stages=[
+                Stage("ORDERED"),
+                Stage("PACKED"),
+                Stage("SHIPPED"),
+            ],
+            transitions=[
+                Transition("ORDERED", "PACKED"),
+                Transition("PACKED", "SHIPPED"),
+            ],
+            initial_stage="ORDERED",
+            version=1
+        )
     )
 
 def create_instance(engine: WorkflowEngine, workflow: WorkflowDefinition) -> WorkflowInstance:    

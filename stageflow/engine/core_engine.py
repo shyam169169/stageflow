@@ -25,21 +25,7 @@ class WorkflowEngine:
     def register_hooks(self, hook: Hook):
         self.hooks.append(hook)
 
-    def register_workflow(
-            self, 
-            workflow_name: str,
-            stages: list[Stage],
-            transitions: list[Transition],
-            initial_stage: str,
-            version: int) -> WorkflowDefinition:
-        workflow = WorkflowDefinition(
-            name=workflow_name,
-            stages=stages,
-            transitions=transitions,
-            initial_stage=initial_stage,
-            version=version
-        )
-
+    def register_workflow(self, workflow: WorkflowDefinition) -> WorkflowDefinition:
         WorkflowDefinitionValidator.validate_workflow(workflow)
         self.workflow_repo.save(workflow)
         return workflow
@@ -47,20 +33,23 @@ class WorkflowEngine:
     def create_instance(
             self,
             workflow_name: str,
-            current_stage: str,
             reference_id: str,
             reference_domain: str,
             metadata : Optional[dict] = None
         ) -> WorkflowInstance:
-        
+
+        workflow = self.workflow_repo.get(workflow_name)
+
         instance = WorkflowInstance(
             id=str(uuid.uuid4()),
             workflow_name=workflow_name,
-            current_stage=current_stage,
             reference_id=reference_id,
             reference_domain=reference_domain,
+            current_stage=workflow.initial_stage,
             metadata=metadata
         )
+        
+
         return self.instance_repo.create(instance)
 
     def do_transition(

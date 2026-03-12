@@ -16,9 +16,9 @@ class InstanceRepository(ABC):
     def update(self, instance: WorkflowInstance) -> WorkflowInstance:
         pass
 
-    @abstractmethod
-    def delete(self, instance_id: str) -> None:
-        pass
+    ##@abstractmethod
+    ##def delete(self, instance_id: str) -> None:
+    ##   pass
 
 class HistoryRepository(ABC):
     @abstractmethod

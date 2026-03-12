@@ -16,9 +16,10 @@ class PostgresHistoryRepository(HistoryRepository):
         self.db.commit()
     
     def get_all_transitions(self, instance_id):
-        models = list(
+        models = (
             self.db.query(TransitionHistoryModel)
-            .filter_by(id=instance_id)
+            .filter(TransitionHistoryModel.instance_id==instance_id)
+            .all()
         )
 
         if not models:

@@ -1,8 +1,11 @@
 from stageflow.engine.core_engine import WorkflowEngine
 from stageflow.core.domain.models.models import *
 from stageflow.repository.memory import InMemoryHistoryRepository, InMemoryWorkflowInstanceRepository, InMemoryWorkflowRepository
+from stageflow.repository.postgres.instance_repository import PostgresInstanceRepository
+from stageflow.repository.postgres.history_repository import PostgresHistoryRepository
 from stageflow.hooks.builtin.audit_hook import AuditHook
 from stageflow.hooks.builtin.web_hook import WebHook
+from stageflow.repository.postgres.db import SessionLocal
 
 stages = [
     Stage("ordered"),
@@ -18,9 +21,10 @@ transitions = [
     Transition("in-transit", "delivered")
 ]
 
+db = SessionLocal()
 workflow_repo = InMemoryWorkflowRepository()
-instance_repo = InMemoryWorkflowInstanceRepository()
-history_repo = InMemoryHistoryRepository()
+instance_repo = PostgresInstanceRepository(db)
+history_repo = PostgresHistoryRepository(db)
 
 engine = WorkflowEngine(
     workflow_repo=workflow_repo,
@@ -32,11 +36,13 @@ engine.register_hooks(AuditHook())
 engine.register_hooks(WebHook())
 
 delivery_workflow = engine.register_workflow(
-    workflow_name="delivery_workflow",
-    stages=stages,
-    transitions=transitions,
-    initial_stage="ordered",
-    version=1
+    WorkflowDefinition(
+        name="delivery_workflow",
+        stages=stages,
+        transitions=transitions,
+        initial_stage="ordered",
+        version=1
+    )
 )
 
 instance = engine.create_instance(

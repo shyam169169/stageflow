@@ -56,7 +56,7 @@ class WorkflowInstance:
 @dataclass
 class TransitionRecord: # When did the order move to SHIPPED? Which stage is causing delays?
     id: str
-    instance_id: int
+    instance_id: str
     from_stage: str
     to_stage: str
     created_at: datetime = field(default_factory=datetime.utcnow)
