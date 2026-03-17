@@ -7,6 +7,8 @@ import stageflow.workflows as workflows
 import os
 from sqlalchemy import create_engine
 from stageflow.repository.postgres.models import Base
+from  stageflow.api.register_exception_handler import register_exception_handlers
+from stageflow.core.domain.errors.exceptions import StageFlowException
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,5 +36,8 @@ app = FastAPI(
 
 app.include_router(instances_router.router)
 app.include_router(workflow_router.router)
+register_exception_handlers(app)
+
+
 
 

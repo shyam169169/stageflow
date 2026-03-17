@@ -1,21 +1,22 @@
 
 class StageFlowException(Exception):
     """Base exception for StageFlow"""
+    code = "STAGEFLOW_EXCEPTION"
 
 class WorkflowNotFoundException(StageFlowException):
-    pass
+    code = "WORKFLOW_NOT_FOUND_EXCEPTION"
 
 class InstanceNotFoundException(StageFlowException):
-    pass
+    code = "INSTANCE_NOT_FOUND_EXCEPTION"
 
 class ConcurrentTransitionException(StageFlowException):
-    pass
+    code = "CONCURRENT_TRANSITION_EXCEPTION"
 
 class InvalidTansitionException(StageFlowException):
-    pass
+    code = "INVALID_TRANSITION_EXCEPTION"
 
 class RuleVoilationException(StageFlowException):
-    pass
+    code = "RULE_VIOLATION_EXCEPTION"
 
 class WorkflowValidationException(StageFlowException):
-    pass
+    passcode = "WORKFLOW_VALIDATION_EXCEPTION"
