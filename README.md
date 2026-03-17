@@ -270,6 +270,7 @@ pytest
 ```
 stageflow/
 ├── api/
+├── core/
 ├── service/
 ├── engine/
 ├── repository/
@@ -277,6 +278,11 @@ stageflow/
 ├── hooks/
 ├── visualization/
 ├── workflows/
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+└── README.md
 ```
 
 ---
