@@ -38,7 +38,6 @@ def create_workflow(engine: WorkflowEngine) -> WorkflowDefinition:
 def create_instance(engine: WorkflowEngine, workflow: WorkflowDefinition) -> WorkflowInstance:    
     return engine.create_instance(
         workflow_name=workflow.name,
-        current_stage="ORDERED",
         reference_id="ORDER 123",
         reference_domain="delivery"
     )
