@@ -227,7 +227,6 @@ Prevents race conditions across services.
 POST   /instances
 GET    /instances/{id}
 POST   /instances/{id}/transition
-GET    /instances/{id}/transitions
 GET    /instances/{id}/history
 GET    /workflows/{name}/graph
 ```
@@ -249,7 +248,7 @@ stageflow/
 ├── api/
 ├── service/
 ├── engine/
-├── persistence/
+├── repository/
 ├── rules/
 ├── hooks/
 ├── visualization/
