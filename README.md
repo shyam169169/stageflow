@@ -87,6 +87,14 @@ It allows you to define **state machines (workflows)** and execute them with:
 
 ## 📦 Installation
 
+## 🐳 Run with Docker
+
+```bash
+docker-compose up --build
+```
+
+API: http://localhost:8000/docs
+
 ```bash
 pip install -e .
 ```
