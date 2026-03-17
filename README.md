@@ -102,18 +102,57 @@ Designed to simplify complex business processes like:
 
 ---
 
-## 📦 Installation
+## ⚙️ Quick Start (Docker)
 
-## 🐳 Run with Docker
+### 1. Run the system
 
 ```bash
 docker-compose up --build
 ```
 
-API: http://localhost:8000/docs
+### 2. Open API docs
+
+```
+http://localhost:8000/docs
+```
+
 ---
 
-## ⚙️ Quick Start
+## 🔥 Demo Flow (Try it out!!)
+
+### Create instance
+
+```bash
+curl -X POST http://localhost:8000/instances \
+-H "Content-Type: application/json" \
+-d '{
+  "workflow_name": "delivery",
+  "reference_id": "order_123",
+  "reference_type": "ORDER"
+}'
+```
+
+### Transition
+
+```bash
+curl -X POST http://localhost:8000/instances/<id>/transition \
+-H "Content-Type: application/json" \
+-d '{
+  "to_stage": "PACKED"
+}'
+```
+
+---
+
+### Get state
+
+```bash
+curl http://localhost:8000/instances/<id>
+```
+
+---
+
+## 📦 Local Installation
 
 ```bash
 pip install -e .
