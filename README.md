@@ -23,7 +23,24 @@ It allows you to define **state machines (workflows)** and execute them with:
 - ✅ Transition history tracking  
 - ✅ Graph visualization (Graphviz)  
 - ✅ REST API (FastAPI)  
-- ✅ Clean service interface for easy integration  
+- ✅ Clean service interface for easy integration
+- ✅ Docker containerization
+
+---
+
+## 💡 Why StageFlow?
+
+Most backend systems implement ad-hoc state transitions.
+
+StageFlow provides:
+- structured workflow management
+- safe state transitions
+- extensibility via rules and hooks
+
+Designed to simplify complex business processes like:
+- order pipelines
+- payment flows
+- approvals
 
 ---
 
@@ -85,31 +102,89 @@ It allows you to define **state machines (workflows)** and execute them with:
 
 ---
 
-## 📦 Installation
+## ⚙️ Quick Start (Docker)
 
-## 🐳 Run with Docker
+### 1. Run the system
 
 ```bash
 docker-compose up --build
 ```
 
-API: http://localhost:8000/docs
+This step creates the tables and initiatizes the stageflow app, creating two containers, one for db and one for the app.
+
+### 2. Open API docs
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+## 🔥 Demo Flow (Try it out!!)
+
+### Create instance
+
+"delivery_workflow" is already configured an example in the stageflow/workflows folder. 
+
+```bash
+curl -X POST http://localhost:8000/instances \
+-H "Content-Type: application/json" \
+-d '{
+  "workflow_name": "delivery_workflow",
+  "reference_id": "order_123",
+  "reference_type": "ORDER"
+}'
+```
+
+### Do Transition to the mentioned stage
+
+```bash
+curl -X POST http://localhost:8000/instances/<id>/transition \
+-H "Content-Type: application/json" \
+-d '{
+  "to_stage": "PACKED"
+}'
+```
+
+---
+
+### Get current State
+
+```bash
+curl http://localhost:8000/instances/<id>
+```
+
+#### Get Transition History
+
+```bash
+curl http://localhost:8000/instances/<instance_id>/history
+```
+
+---
+
+## 📦 Local Installation
 
 ```bash
 pip install -e .
 ```
 
----
-
-## ⚙️ Quick Start
-
 ### 1. Define a Workflow
+
+Workflows should be defined in your application, not inside StageFlow. 
+
+Create a folder in your application:
+
+```
+my_app/
+  workflows/
+    my_delivery_workflow.py
+```
 
 ```python
 from stageflow.core.domain.models import WorkflowDefinition, Stage, Transition
 
 workflow = WorkflowDefinition(
-    name="delivery",
+    name="my_delivery_workflow",
     stages=[
         Stage("ORDERED"),
         Stage("PACKED"),
@@ -123,57 +198,51 @@ workflow = WorkflowDefinition(
     ]
 )
 ```
-
 ---
 
-### 2. Initialize StageFlow
+### 2. Register Workflows with StageFlow
+
+Let's register your workflow to Stageflow app. When initializing StageFlow, pass your workflows package:
 
 ```python
 from stageflow import StageFlow
 import my_app.workflows as workflows
 
-sf = StageFlow(
-    db_url="postgresql://localhost/stageflow",
+stageflow = StageFlow(
+    db_url="postgresql://postgres:postgres@db:5432/stageflow",
     workflows_package=workflows
 )
 ```
 
----
+**Note - Ensure the db_url matches your docker config for db**
 
-### 3. Create Instance
+StageFlow will automatically discover and register all workflows in the package. You can register as many workflows as you want in the /Workflows directory.
 
-```python
-instance = sf.create_instance(
-    workflow_name="delivery",
-    reference_id="order_123",
-    reference_type="ORDER"
-)
-```
-
----
-
-### 4. Transition
-
-```python
-sf.transition(instance.id, "PACKED")
-```
-
----
-
-### 5. Get State
-
-```python
-sf.get_instance(instance.id)
-```
-
----
+Try the curl requests above to test your workflows!
 
 ## 🔁 Workflow Lifecycle
 
 ```
-Create Instance → Transition → Transition → Terminal State
+ORDERED → PACKED → SHIPPED → DELIVERED
 ```
 
+---
+
+## 🧠 Key Concept
+
+```
+StageFlow = engine  
+Your application = workflows  
+API = interface to execute workflows  
+```
+
+---
+## ⚠️ Important Notes
+
+- `workflow_name` must match the name defined in your workflow  
+- `current_stage` is managed internally by StageFlow  
+- All transitions must follow defined workflow rules
+  
 ---
 
 ## 📊 Visualization
@@ -254,6 +323,7 @@ pytest
 ```
 stageflow/
 ├── api/
+├── core/
 ├── service/
 ├── engine/
 ├── repository/
@@ -261,6 +331,11 @@ stageflow/
 ├── hooks/
 ├── visualization/
 ├── workflows/
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+└── README.md
 ```
 
 ---
