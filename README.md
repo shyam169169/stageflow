@@ -23,7 +23,8 @@ It allows you to define **state machines (workflows)** and execute them with:
 - ✅ Transition history tracking  
 - ✅ Graph visualization (Graphviz)  
 - ✅ REST API (FastAPI)  
-- ✅ Clean service interface for easy integration  
+- ✅ Clean service interface for easy integration
+- ✅ Docker containerization
 
 ---
 
