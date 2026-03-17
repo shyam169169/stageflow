@@ -111,14 +111,13 @@ docker-compose up --build
 ```
 
 API: http://localhost:8000/docs
+---
+
+## ⚙️ Quick Start
 
 ```bash
 pip install -e .
 ```
-
----
-
-## ⚙️ Quick Start
 
 ### 1. Define a Workflow
 
