@@ -126,7 +126,7 @@ http://localhost:8000/docs
 curl -X POST http://localhost:8000/instances \
 -H "Content-Type: application/json" \
 -d '{
-  "workflow_name": "delivery",
+  "workflow_name": "delivery_workflow",
   "reference_id": "order_123",
   "reference_type": "ORDER"
 }'
