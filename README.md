@@ -1,70 +1,111 @@
-🚀 StageFlow
+# 🚀 StageFlow
 
-StageFlow is a lightweight, extensible workflow engine for backend systems.
+**StageFlow** is a lightweight, extensible workflow engine for backend systems.
 
-It allows you to define state machines (workflows) and execute them with:
+It allows you to define **state machines (workflows)** and execute them with:
 
-rules
+- rules
+- transitions
+- history tracking
+- persistence
+- hooks for integrations
 
-transitions
+---
 
-history tracking
+## ✨ Features
 
-persistence
+- ✅ Configurable workflow definitions  
+- ✅ Dynamic state transitions  
+- ✅ Rule engine (metadata, expressions, time-based)  
+- ✅ Transition hooks (before/after)  
+- ✅ PostgreSQL persistence  
+- ✅ Optimistic locking (concurrency safe)  
+- ✅ Transition history tracking  
+- ✅ Graph visualization (Graphviz)  
+- ✅ REST API (FastAPI)  
+- ✅ Clean service interface for easy integration  
 
-hooks for integrations
+---
 
-✨ Features
+## 🧠 Use Cases
 
-✅ Configurable workflow definitions
+- Order / delivery tracking  
+- Payment processing flows  
+- User onboarding pipelines  
+- Approval workflows  
+- Internal business processes  
 
-✅ Dynamic state transitions
+---
 
-✅ Rule engine (metadata, expressions, time-based)
+## 🏗 Architecture
 
-✅ Transition hooks (before/after)
+```
+                           ┌──────────────────────────────┐
+                           │        Client / API          │
+                           │ (HTTP / Service / CLI / SDK) │
+                           └──────────────┬───────────────┘
+                                          │
+                                          ▼
+                           ┌──────────────────────────────┐
+                           │        FastAPI Layer         │
+                           │  Routers / Schemas / DI      │
+                           └──────────────┬───────────────┘
+                                          │
+                                          ▼
+                           ┌──────────────────────────────┐
+                           │     StageFlow Service        │
+                           │  (Public Interface / SDK)    │
+                           └──────────────┬───────────────┘
+                                          │
+                                          ▼
+                           ┌──────────────────────────────┐
+                           │      Workflow Engine         │
+                           │  State Machine + Rules       │
+                           └──────────────┬───────────────┘
+                                          │
+                 ┌────────────────────────┼────────────────────────┐
+                 ▼                        ▼                        ▼
+      ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+      │     Rules        │     │      Hooks       │     │   Visualization  │
+      │ Metadata/Expr    │     │ Before/After     │     │ Graphviz Export  │
+      └──────────────────┘     └──────────────────┘     └──────────────────┘
+                                          │
+                                          ▼
+                           ┌──────────────────────────────┐
+                           │      Repository Layer        │
+                           │  (Interface + Implementations)
+                           └──────────────┬───────────────┘
+                                          │
+                                          ▼
+                           ┌──────────────────────────────┐
+                           │       PostgreSQL DB          │
+                           │ Instances + History          │
+                           └──────────────────────────────┘
+```
 
-✅ PostgreSQL persistence
+---
 
-✅ Optimistic locking (concurrency safe)
+## 📦 Installation
 
-✅ Transition history tracking
+## 🐳 Run with Docker
 
-✅ Graph visualization (Graphviz)
+```bash
+docker-compose up --build
+```
 
-✅ REST API (via FastAPI)
+API: http://localhost:8000/docs
 
-✅ Clean service interface for easy integration
-
-🧠 Use Cases
-
-Order / delivery tracking
-
-Payment processing flows
-
-User onboarding pipelines
-
-Approval workflows
-
-Internal business processes
-
-🏗 Architecture
-API → Service → Engine → Repository → Database
-
-API Layer → Handles HTTP requests
-
-Service Layer → Public interface (SDK-like)
-
-Engine → Core workflow execution
-
-Repositories → Persistence abstraction
-
-Database → PostgreSQL
-
-📦 Installation
+```bash
 pip install -e .
-⚙️ Quick Start
-1. Define a Workflow
+```
+
+---
+
+## ⚙️ Quick Start
+
+### 1. Define a Workflow
+
+```python
 from stageflow.core.domain.models import WorkflowDefinition, Stage, Transition
 
 workflow = WorkflowDefinition(
@@ -81,7 +122,13 @@ workflow = WorkflowDefinition(
         Transition("SHIPPED", "DELIVERED")
     ]
 )
-2. Initialize StageFlow
+```
+
+---
+
+### 2. Initialize StageFlow
+
+```python
 from stageflow import StageFlow
 import my_app.workflows as workflows
 
@@ -89,88 +136,151 @@ sf = StageFlow(
     db_url="postgresql://localhost/stageflow",
     workflows_package=workflows
 )
-3. Create Instance
+```
+
+---
+
+### 3. Create Instance
+
+```python
 instance = sf.create_instance(
     workflow_name="delivery",
     reference_id="order_123",
     reference_type="ORDER"
 )
-4. Transition
+```
+
+---
+
+### 4. Transition
+
+```python
 sf.transition(instance.id, "PACKED")
-5. Get State
+```
+
+---
+
+### 5. Get State
+
+```python
 sf.get_instance(instance.id)
-🔁 Workflow Lifecycle
+```
+
+---
+
+## 🔁 Workflow Lifecycle
+
+```
 Create Instance → Transition → Transition → Terminal State
-📊 Visualization
+```
 
-Export workflow graph:
+---
 
+## 📊 Visualization
+
+```python
 sf.export_graph("delivery")
+```
 
 Example:
 
+```
 ORDERED → PACKED → SHIPPED → DELIVERED
-🧩 Rules
+```
 
-Example rule:
+---
 
+## 🧩 Rules
+
+```python
 MetadataRule("payment_status", "paid")
-🔌 Hooks
+```
+
+---
+
+## 🔌 Hooks
+
+```python
 class AuditHook(Hook):
 
     def after_transition(self, context):
         print(context.transition)
-🗄 Persistence
+```
 
-PostgreSQL via SQLAlchemy
+---
 
-JSON metadata support
+## 🗄 Persistence
 
-Transition history tracking
+- PostgreSQL via SQLAlchemy  
+- JSON metadata support  
+- Transition history tracking  
 
-🔐 Concurrency Safety
+---
 
-Uses optimistic locking:
+## 🔐 Concurrency Safety
 
+Uses **optimistic locking**:
+
+```
 UPDATE ... WHERE version = ?
+```
 
 Prevents race conditions across services.
 
-🌐 API Endpoints
+---
+
+## 🌐 API Endpoints
+
+```
 POST   /instances
 GET    /instances/{id}
 POST   /instances/{id}/transition
-GET    /instances/{id}/transitions
 GET    /instances/{id}/history
 GET    /workflows/{name}/graph
-🧪 Testing
+```
+
+---
+
+## 🧪 Testing
+
+```bash
 pytest
-🧱 Project Structure
+```
+
+---
+
+## 🧱 Project Structure
+
+```
 stageflow/
 ├── api/
 ├── service/
 ├── engine/
-├── persistence/
+├── repository/
 ├── rules/
 ├── hooks/
 ├── visualization/
 ├── workflows/
-🚀 Roadmap
+```
 
- Workflow versioning
+---
 
- Async hooks
+## 🚀 Roadmap
 
- Kafka / event integration
+- [ ] Workflow versioning  
+- [ ] Async hooks  
+- [ ] Kafka / event integration  
+- [ ] UI dashboard  
+- [ ] Multi-tenant workflows  
 
- UI dashboard
+---
 
- Multi-tenant workflows
-
-🤝 Contributing
+## 🤝 Contributing
 
 Contributions are welcome!
 
-📄 License
+---
+
+## 📄 License
 
 MIT License
