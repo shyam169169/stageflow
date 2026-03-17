@@ -160,11 +160,15 @@ pip install -e .
 
 ### 1. Define a Workflow
 
+Workflows should be defined in your application, not inside StageFlow. 
+
+Eg: # your_app/workflows/my_delivery_workflow.py
+
 ```python
 from stageflow.core.domain.models import WorkflowDefinition, Stage, Transition
 
 workflow = WorkflowDefinition(
-    name="delivery",
+    name="my_delivery_workflow",
     stages=[
         Stage("ORDERED"),
         Stage("PACKED"),
@@ -179,31 +183,10 @@ workflow = WorkflowDefinition(
 )
 ```
 
----
+## 🔁 Workflow Lifecycle
 
-### 2. Initialize StageFlow
-
-```python
-from stageflow import StageFlow
-import my_app.workflows as workflows
-
-sf = StageFlow(
-    db_url="postgresql://localhost/stageflow",
-    workflows_package=workflows
-)
 ```
-
----
-
-### 3. Create Instance
-
-```python
-instance = sf.create_instance(
-    workflow_name="delivery",
-    reference_id="order_123",
-    reference_type="ORDER"
-)
-```
+ORDERED → PACKED → SHIPPED → DELIVERED
 
 ---
 
