@@ -1,39 +1,24 @@
-🚀 StageFlow
+🚀 **StageFlow**
 
 StageFlow is a lightweight, extensible workflow engine for backend systems.
-
 It allows you to define state machines (workflows) and execute them with:
 
 rules
-
 transitions
-
 history tracking
-
 persistence
-
 hooks for integrations
 
-✨ Features
-
+✨ **Features**
 ✅ Configurable workflow definitions
-
 ✅ Dynamic state transitions
-
 ✅ Rule engine (metadata, expressions, time-based)
-
 ✅ Transition hooks (before/after)
-
 ✅ PostgreSQL persistence
-
 ✅ Optimistic locking (concurrency safe)
-
 ✅ Transition history tracking
-
 ✅ Graph visualization (Graphviz)
-
 ✅ REST API (via FastAPI)
-
 ✅ Clean service interface for easy integration
 
 🧠 Use Cases
