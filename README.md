@@ -237,7 +237,13 @@ API = interface to execute workflows
 ```
 
 ---
+## ⚠️ Important Notes
 
+- `workflow_name` must match the name defined in your workflow  
+- `current_stage` is managed internally by StageFlow  
+- All transitions must follow defined workflow rules
+  
+---
 
 ## 📊 Visualization
 
