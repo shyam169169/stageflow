@@ -110,6 +110,8 @@ Designed to simplify complex business processes like:
 docker-compose up --build
 ```
 
+This step creates the tables and initiatizes the stageflow app, creating two containers, one for db and one for the app.
+
 ### 2. Open API docs
 
 ```
@@ -122,6 +124,8 @@ http://localhost:8000/docs
 
 ### Create instance
 
+"delivery_workflow" is already configured an example in the stageflow/workflows folder. 
+
 ```bash
 curl -X POST http://localhost:8000/instances \
 -H "Content-Type: application/json" \
@@ -132,7 +136,7 @@ curl -X POST http://localhost:8000/instances \
 }'
 ```
 
-### Transition
+### Do Transition to the mentioned stage
 
 ```bash
 curl -X POST http://localhost:8000/instances/<id>/transition \
@@ -144,10 +148,16 @@ curl -X POST http://localhost:8000/instances/<id>/transition \
 
 ---
 
-### Get state
+### Get current State
 
 ```bash
 curl http://localhost:8000/instances/<id>
+```
+
+#### Get Transition History
+
+```bash
+curl http://localhost:8000/instances/<instance_id>/history
 ```
 
 ---
@@ -162,7 +172,13 @@ pip install -e .
 
 Workflows should be defined in your application, not inside StageFlow. 
 
-Eg: # your_app/workflows/my_delivery_workflow.py
+Create a folder in your application:
+
+```
+my_app/
+  workflows/
+    my_delivery_workflow.py
+```
 
 ```python
 from stageflow.core.domain.models import WorkflowDefinition, Stage, Transition
@@ -182,11 +198,42 @@ workflow = WorkflowDefinition(
     ]
 )
 ```
+---
+
+### 2. Register Workflows with StageFlow
+
+Let's register your workflow to Stageflow app. When initializing StageFlow, pass your workflows package:
+
+```python
+from stageflow import StageFlow
+import my_app.workflows as workflows
+
+stageflow = StageFlow(
+    db_url="postgresql://postgres:postgres@db:5432/stageflow",
+    workflows_package=workflows
+)
+```
+
+**Note - Ensure the db_url matches your docker config for db**
+
+StageFlow will automatically discover and register all workflows in the package. You can register as many workflows as you want in the /Workflows directory.
+
+Try the curl requests above to test your workflows!
 
 ## 🔁 Workflow Lifecycle
 
 ```
 ORDERED → PACKED → SHIPPED → DELIVERED
+```
+
+---
+
+## 🧠 Key Concept
+
+```
+StageFlow = engine  
+Your application = workflows  
+API = interface to execute workflows  
 ```
 
 ---
