@@ -1,4 +1,4 @@
-🚀 **StageFlow**
+🚀 ***StageFlow***
 
 StageFlow is a lightweight, extensible workflow engine for backend systems.
 It allows you to define state machines (workflows) and execute them with:
