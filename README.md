@@ -28,6 +28,22 @@ It allows you to define **state machines (workflows)** and execute them with:
 
 ---
 
+## 💡 Why StageFlow?
+
+Most backend systems implement ad-hoc state transitions.
+
+StageFlow provides:
+- structured workflow management
+- safe state transitions
+- extensibility via rules and hooks
+
+Designed to simplify complex business processes like:
+- order pipelines
+- payment flows
+- approvals
+
+---
+
 ## 🧠 Use Cases
 
 - Order / delivery tracking  
