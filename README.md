@@ -187,32 +187,10 @@ workflow = WorkflowDefinition(
 
 ```
 ORDERED → PACKED → SHIPPED → DELIVERED
-
----
-
-### 4. Transition
-
-```python
-sf.transition(instance.id, "PACKED")
 ```
 
 ---
 
-### 5. Get State
-
-```python
-sf.get_instance(instance.id)
-```
-
----
-
-## 🔁 Workflow Lifecycle
-
-```
-Create Instance → Transition → Transition → Terminal State
-```
-
----
 
 ## 📊 Visualization
 
