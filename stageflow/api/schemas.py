@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, Dict
+from datetime import datetime
 
 class CreateInstanceRequest(BaseModel):
     workflow_name: str
@@ -17,3 +18,10 @@ class InstanceResponse(BaseModel):
     workflow_name: str
     current_stage: str
     reference_id: str
+
+class TransitionResponse(BaseModel):
+    id: str
+    instance_id: str
+    from_stage: str
+    to_stage: str
+    created_at: datetime

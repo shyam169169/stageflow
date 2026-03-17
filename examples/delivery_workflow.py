@@ -1,6 +1,6 @@
 from stageflow.engine.core_engine import WorkflowEngine
 from stageflow.core.domain.models.models import *
-from stageflow.repository.memory import InMemoryHistoryRepository, InMemoryWorkflowInstanceRepository, InMemoryWorkflowRepository
+from stageflow.repository.memory import InMemoryWorkflowRepository
 from stageflow.repository.postgres.instance_repository import PostgresInstanceRepository
 from stageflow.repository.postgres.history_repository import PostgresHistoryRepository
 from stageflow.hooks.builtin.audit_hook import AuditHook
