@@ -17,9 +17,6 @@ async def lifespan(app: FastAPI):
 
     db_engine = create_engine(db_url)
 
-    # Create database tables
-    Base.metadata.create_all(db_engine)
-
     stageflow = Stageflow(
         db_url=db_url,
         workflows_package=workflows

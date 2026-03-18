@@ -7,26 +7,20 @@ import os
 
 from alembic import context
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
+db_url = os.getenv("DATABASE_URL")
+
+if not db_url:
+    print ("DATABASE_URL not set. Defaulting to localhost")
+    db_url = "postgresql://postgres:postgres@localhost:5432/stageflow"
+
+config.set_main_option("sqlalchemy.url", db_url)
+
 target_metadata = Base.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -40,7 +34,11 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = os.getenv("DATABASE_URL")
+
+    if url:
+        config.set_main_option("sqlalchemy.url", url)
+
     context.configure(
         url=url,
         target_metadata=target_metadata,

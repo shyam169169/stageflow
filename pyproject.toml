@@ -15,7 +15,8 @@ dependencies = [
     "uvicorn",
     "sqlalchemy",
     "psycopg2-binary",
-    "alembic"
+    "alembic",
+    "python-dotenv"
 ]
 
 [tool.setuptools.packages.find]
