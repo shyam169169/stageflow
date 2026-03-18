@@ -15,8 +15,7 @@ if config.config_file_name is not None:
 db_url = os.getenv("DATABASE_URL")
 
 if not db_url:
-    print ("DATABASE_URL not set. Defaulting to localhost")
-    db_url = "postgresql://postgres:postgres@localhost:5432/stageflow"
+    raise ValueError("DATABASE_URL not set")
 
 config.set_main_option("sqlalchemy.url", db_url)
 
