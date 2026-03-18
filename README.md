@@ -99,7 +99,6 @@ Designed to simplify complex business processes like:
                            │ Instances + History          │
                            └──────────────────────────────┘
 ```
-
 ---
 
 ## ⚙️ Quick Start (Docker)
@@ -117,6 +116,55 @@ This step creates the tables and initiatizes the stageflow app, creating two con
 ```
 http://localhost:8000/docs
 ```
+
+---
+
+## 🗄 Database Configuration To Know Before Setup
+
+The system uses the following default configuration:
+
+```env
+POSTGRES_DB=stageflow
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DATABASE_URL=postgresql://postgres:postgres@db:5432/stageflow
+```
+
+---
+
+## 🧩 Database Migrations (Alembic)
+
+StageFlow uses Alembic for schema management.
+
+---
+
+### 🔹 Important: Initial Setup
+
+Before running the system, ensure that **migration files exist**.
+
+If you are setting up the project for the first time:
+
+```bash
+# Run inside Docker
+docker exec -it <api_container> alembic revision --autogenerate -m "initial schema"
+docker exec -it <api_container> alembic upgrade head
+```
+
+👉 This creates the initial tables.
+
+---
+
+### 🔹 Applying Migrations (Automatic)
+
+When the API container starts:
+
+```text
+✔ waits for Postgres
+✔ runs: alembic upgrade head
+✔ ensures DB schema is up-to-date
+```
+
+No manual step required after initial migration.
 
 ---
 
