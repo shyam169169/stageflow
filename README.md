@@ -25,6 +25,7 @@ It allows you to define **state machines (workflows)** and execute them with:
 - ✅ REST API (FastAPI)  
 - ✅ Clean service interface for easy integration
 - ✅ Docker containerization
+- ✅ Alembic DB migrations
 
 ---
 
